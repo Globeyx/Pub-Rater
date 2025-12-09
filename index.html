@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PubRater | Discover & Rate</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="brand">
+                <span>🍺</span> PubRater
+            </div>
+            <button id="addPubBtn" class="btn btn-primary">
+                <span>+</span> Add Pub
+            </button>
+        </header>
+
+        <main>
+            <section class="hero" style="margin-bottom: 40px; text-align: center;">
+                <h1 style="font-size: 3rem; margin-bottom: 16px;">Find your next <span
+                        style="color: var(--primary)">favorite spot</span>.</h1>
+                <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+                    Discover the best pubs in town, rated by the community. Join us in finding the perfect pint.
+                </p>
+            </section>
+
+            <div id="pubList" class="pub-grid">
+                <!-- Pubs will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Pub Modal -->
+    <div id="addPubModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 24px;">Add New Pub</h2>
+            <form id="addPubForm">
+                <div class="form-group">
+                    <label class="form-label">Pub Name</label>
+                    <input type="text" name="name" class="form-input" required placeholder="e.g. The Golden Lion">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" name="location" class="form-input" required placeholder="e.g. Camden Town">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-textarea" rows="3"
+                        placeholder="What's the vibe like?"></textarea>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px;">
+                    <button type="button" class="btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Pub</button>
+                </div>
+            </form>
+        </div>
+        <div id="ratePubModal" class="modal-overlay">
+            <div class="modal-content">
+                <h2 style="margin-bottom: 24px;">Rate this Pub</h2>
+                <form id="ratePubForm">
+                    <input type="hidden" name="pubId" id="ratePubId">
+                    <div class="form-group">
+                        <label class="form-label">Your Rating</label>
+                        <div class="star-rating" id="starRating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" name="rating" id="ratingInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Review (Optional)</label>
+                        <textarea name="reviewText" class="form-textarea" rows="3"
+                            placeholder="Any thoughts?"></textarea>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px;">
+                        <button type="button" class="btn" id="cancelRateBtn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

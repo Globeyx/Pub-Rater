@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PubRater | Discover & Rate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* PREVIEW MODE STYLE */
+        :root {
+            /* Premium Dark Theme Palette */
+            --bg-body: #0a0a0c;
+            --bg-surface: #141418;
+            --bg-surface-glass: rgba(20, 20, 24, 0.7);
+            --primary: #f59e0b;
+            --primary-hover: #d97706;
+            --accent: #6366f1;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            --font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.08) 0%, transparent 40%);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            margin-bottom: 40px;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-main), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--border-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .pub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .pub-card {
+            background: var(--bg-surface-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .pub-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .pub-name {
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+        }
+
+        .pub-location {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rating-badge {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pub-reviews {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--bg-surface);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-main);
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .star {
+            color: var(--border-light);
+            font-size: 1.5rem;
+            transition: color 0.2s;
+        }
+
+        .star.active,
+        .star:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="brand">
+                <span>🍺</span> PubRater
+            </div>
+            <button id="addPubBtn" class="btn btn-primary">
+                <span>+</span> Add Pub
+            </button>
+        </header>
+
+        <main>
+            <section class="hero" style="margin-bottom: 40px; text-align: center;">
+                <h1 style="font-size: 3rem; margin-bottom: 16px;">Find your next <span
+                        style="color: var(--primary)">favorite spot</span>.</h1>
+                <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+                    Discover the best pubs in town, rated by the community. Join us in finding the perfect pint.
+                </p>
+            </section>
+
+            <div id="pubList" class="pub-grid">
+                <!-- Pubs will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Pub Modal -->
+    <div id="addPubModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 24px;">Add New Pub</h2>
+            <form id="addPubForm">
+                <div class="form-group">
+                    <label class="form-label">Pub Name</label>
+                    <input type="text" name="name" class="form-input" required placeholder="e.g. The Golden Lion">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" name="location" class="form-input" required placeholder="e.g. Camden Town">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-textarea" rows="3"
+                        placeholder="What's the vibe like?"></textarea>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px;">
+                    <button type="button" class="btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Pub</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="ratePubModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 24px;">Rate this Pub</h2>
+            <form id="ratePubForm">
+                <input type="hidden" name="pubId" id="ratePubId">
+                <div class="form-group">
+                    <label class="form-label">Your Rating</label>
+                    <div class="star-rating" id="starRating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <input type="hidden" name="rating" id="ratingInput" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Review (Optional)</label>
+                    <textarea name="reviewText" class="form-textarea" rows="3" placeholder="Any thoughts?"></textarea>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px;">
+                    <button type="button" class="btn" id="cancelRateBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Rating</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // PREVIEW MODE SCRIPT (Bundled)
+
+        // Store Logic
+        const STORAGE_KEY = 'pub_rater_data_v3';
+        const initialPubs = [
+            {
+                id: 'b1',
+                name: 'Hradecký Klenot',
+                location: 'Velké náměstí 25, Hradec Králové',
+                description: 'Brewery in the heart of the city, restoring the tradition of HK brewing.',
+                rating: 4.8,
+                reviews: 150,
+                totalRatingScore: 720
+            },
+            {
+                id: 'b2',
+                name: 'Rodinný pivovar 713',
+                location: 'Hradec Králové - Kukleny',
+                description: 'Family brewery specializing in honest craft lagers and specials.',
+                rating: 4.7,
+                reviews: 45,
+                totalRatingScore: 211.5
+            },
+            {
+                id: 'b3',
+                name: 'Pivovar Beránek',
+                location: 'Stěžery (near HK)',
+                description: 'Microbrewery offering unpasteurized beers like Jehně and Beran.',
+                rating: 4.6,
+                reviews: 98,
+                totalRatingScore: 450.8
+            },
+            {
+                id: 'b4',
+                name: 'Minipivovar Kubík',
+                location: 'Profesora Smotlachy, Hradec Králové',
+                description: 'Small local brewery focusing on quality ingredients.',
+                rating: 4.5,
+                reviews: 32,
+                totalRatingScore: 144
+            },
+            {
+                id: '1',
+                name: 'Pivovarská Brána',
+                location: 'Hradec Králové - Velké náměstí',
+                description: 'Excellent beer in the heart of the city with a friendly environment.',
+                rating: 4.7,
+                reviews: 82,
+                totalRatingScore: 385.4
+            },
+            {
+                id: '2',
+                name: 'na JEDNO',
+                location: 'Hradec Králové - Center',
+                description: 'Beautiful little pub with vaulted ceilings, offering 5 taps of craft beer.',
+                rating: 4.9,
+                reviews: 56,
+                totalRatingScore: 274.4
+            },
+            {
+                id: '3',
+                name: 'Hostinec U Kohouta',
+                location: 'Hradec Králové',
+                description: 'Traditional Czech pub atmosphere offering classic pivo.',
+                rating: 4.4,
+                reviews: 120,
+                totalRatingScore: 528
+            },
+            {
+                id: '4',
+                name: 'Batalion u Draků',
+                location: 'Hradec Králové - Old Town',
+                description: 'Legendary underground spot with foosball, darts, and a cool vibe.',
+                rating: 4.6,
+                reviews: 200,
+                totalRatingScore: 920
+            }
+        ];
+
+        const store = {
+            getPubs() {
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (!data) {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPubs));
+                    return initialPubs;
+                }
+                return JSON.parse(data);
+            },
+
+            addPub(pub) {
+                const pubs = this.getPubs();
+                const newPub = {
+                    ...pub,
+                    id: Date.now().toString(),
+                    rating: 0,
+                    reviews: 0,
+                    totalRatingScore: 0
+                };
+                pubs.unshift(newPub);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(pubs));
+                return newPub;
+            },
+
+            addRating(pubId, ratingValue) {
+                const pubs = this.getPubs();
+                const pubIndex = pubs.findIndex(p => p.id === pubId);
+
+                if (pubIndex > -1) {
+                    const pub = pubs[pubIndex];
+                    const currentReviews = pub.reviews || 0;
+                    const currentTotalScore = pub.totalRatingScore || (pub.rating * currentReviews);
+
+                    const newReviews = currentReviews + 1;
+                    const newTotalScore = currentTotalScore + ratingValue;
+                    const newAverage = newTotalScore / newReviews;
+
+                    const updatedPub = {
+                        ...pub,
+                        reviews: newReviews,
+                        totalRatingScore: newTotalScore,
+                        rating: parseFloat(newAverage.toFixed(1))
+                    };
+
+                    pubs[pubIndex] = updatedPub;
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(pubs));
+                    return updatedPub;
+                }
+            }
+        };
+
+        // Main App Logic
+        const pubListEl = document.getElementById('pubList');
+        const addPubBtn = document.getElementById('addPubBtn');
+        const addPubModal = document.getElementById('addPubModal');
+        const addPubForm = document.getElementById('addPubForm');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // Rate Modal Elements
+        const ratePubModal = document.getElementById('ratePubModal');
+        const ratePubForm = document.getElementById('ratePubForm');
+        const cancelRateBtn = document.getElementById('cancelRateBtn');
+        const starRatingEl = document.getElementById('starRating');
+        const ratingInput = document.getElementById('ratingInput');
+        const ratePubIdInput = document.getElementById('ratePubId');
+        const stars = starRatingEl ? starRatingEl.querySelectorAll('.star') : [];
+
+        function renderPubCard(pub) {
+            const card = document.createElement('div');
+            card.className = 'pub-card';
+            card.innerHTML = `
+        <div class="pub-header">
+        <div>
+            <h3 class="pub-name">${pub.name}</h3>
+            <span class="pub-location">📍 ${pub.location}</span>
+        </div>
+        <div class="rating-badge">
+            ★ ${pub.rating > 0 ? pub.rating.toFixed(1) : '-'}
+        </div>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px;">${pub.description}</p>
+        <div class="pub-reviews" style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
+            ${pub.reviews} Reviews
+        </span>
+        <button class="btn rate-btn" data-id="${pub.id}" style="padding: 6px 12px; font-size: 0.85rem;">Rate Pub</button>
+        </div>
+    `;
+            return card;
+        }
+
+        function renderApp() {
+            const pubs = store.getPubs();
+            pubListEl.innerHTML = '';
+            pubs.forEach(pub => {
+                pubListEl.appendChild(renderPubCard(pub));
+            });
+
+            document.querySelectorAll('.rate-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const pubId = e.target.getAttribute('data-id');
+                    openRateModal(pubId);
+                });
+            });
+        }
+
+        function openRateModal(pubId) {
+            ratePubIdInput.value = pubId;
+            ratePubModal.classList.add('active');
+            updateStarDisplay(0);
+            ratingInput.value = '';
+        }
+
+        function closeRateModal() {
+            ratePubModal.classList.remove('active');
+            ratePubForm.reset();
+            updateStarDisplay(0);
+        }
+
+        function updateStarDisplay(rating) {
+            stars.forEach(star => {
+                const starRating = parseInt(star.getAttribute('data-rating'));
+                if (starRating <= rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        addPubBtn?.addEventListener('click', () => {
+            addPubModal.classList.add('active');
+        });
+
+        function closeAddModal() {
+            addPubModal.classList.remove('active');
+            addPubForm.reset();
+        }
+
+        cancelBtn?.addEventListener('click', closeAddModal);
+
+        addPubModal?.addEventListener('click', (e) => {
+            if (e.target === addPubModal) closeAddModal();
+        });
+
+        addPubForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(addPubForm);
+            const newPub = {
+                name: formData.get('name'),
+                location: formData.get('location'),
+                description: formData.get('description')
+            };
+
+            store.addPub(newPub);
+            renderApp();
+            closeAddModal();
+        });
+
+        cancelRateBtn?.addEventListener('click', closeRateModal);
+
+        ratePubModal?.addEventListener('click', (e) => {
+            if (e.target === ratePubModal) closeRateModal();
+        });
+
+        starRatingEl?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('star')) {
+                const rating = parseInt(e.target.getAttribute('data-rating'));
+                ratingInput.value = rating;
+                updateStarDisplay(rating);
+            }
+        });
+
+        ratePubForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pubId = ratePubIdInput.value;
+            const rating = parseInt(ratingInput.value);
+
+            if (pubId && rating) {
+                store.addRating(pubId, rating);
+                renderApp();
+                closeRateModal();
+            }
+        });
+
+        renderApp();
+    </script>
+</body>
+
+</html>
