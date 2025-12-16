@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'pub_rater_data_v4';
+const STORAGE_KEY = 'pub_rater_data_v6';
 
 const initialPubs = [
   {
@@ -9,9 +9,12 @@ const initialPubs = [
     rating: 4.8,
     reviews: 150,
     totalRatingScore: 720,
+    image: '/images/pubs/klenot.png',
+    mapUrl: 'https://maps.google.com/?q=Velké+náměstí+25,+Hradec+Králové',
     reviewsList: [
       { id: 'r1', rating: 5, text: 'Absolutely amazing beer and atmosphere!', date: '2023-10-15T14:30:00.000Z' },
-      { id: 'r2', rating: 4, text: 'Great place but gets crowded.', date: '2023-10-12T18:00:00.000Z' }
+      { id: 'r2', rating: 4, text: 'Great place but gets crowded.', date: '2023-10-12T18:00:00.000Z' },
+      { id: 'r3', rating: 5, text: 'Best Lager in town, hands down.', date: '2023-09-28T20:15:00.000Z' }
     ]
   },
   {
@@ -21,7 +24,11 @@ const initialPubs = [
     description: 'Family brewery specializing in honest craft lagers and specials.',
     rating: 4.7,
     reviews: 45,
-    totalRatingScore: 211.5
+    totalRatingScore: 211.5,
+    reviewsList: [
+      { id: 'r4', rating: 5, text: 'Hidden gem in Kukleny. The owners are lovely.', date: '2023-11-01T16:00:00.000Z' },
+      { id: 'r5', rating: 4, text: 'A bit out of the way, but worth the trip.', date: '2023-10-20T19:30:00.000Z' }
+    ]
   },
   {
     id: 'b3',
@@ -30,7 +37,12 @@ const initialPubs = [
     description: 'Microbrewery offering unpasteurized beers like Jehně and Beran.',
     rating: 4.6,
     reviews: 98,
-    totalRatingScore: 450.8
+    totalRatingScore: 450.8,
+    reviewsList: [
+      { id: 'r6', rating: 5, text: 'Their "Beran" dark lager is a must-try!', date: '2023-10-05T15:45:00.000Z' },
+      { id: 'r7', rating: 4, text: 'Nice garden for summer, cozy inside for winter.', date: '2023-09-10T12:00:00.000Z' },
+      { id: 'r8', rating: 5, text: 'Great food to go with the beer.', date: '2023-11-12T13:30:00.000Z' }
+    ]
   },
   {
     id: 'b4',
@@ -39,7 +51,11 @@ const initialPubs = [
     description: 'Small local brewery focusing on quality ingredients.',
     rating: 4.5,
     reviews: 32,
-    totalRatingScore: 144
+    totalRatingScore: 144,
+    reviewsList: [
+      { id: 'r9', rating: 4, text: 'Solid beers, though the menu is limited.', date: '2023-10-30T17:00:00.000Z' },
+      { id: 'r10', rating: 5, text: 'Friendly staff and quick service.', date: '2023-11-05T18:20:00.000Z' }
+    ]
   },
   {
     id: '1',
@@ -48,7 +64,11 @@ const initialPubs = [
     description: 'Excellent beer in the heart of the city with a friendly environment.',
     rating: 4.7,
     reviews: 82,
-    totalRatingScore: 385.4
+    totalRatingScore: 385.4,
+    reviewsList: [
+      { id: 'r11', rating: 5, text: 'My favorite spot on the square.', date: '2023-10-25T20:00:00.000Z' },
+      { id: 'r12', rating: 4, text: 'Good selection of rotating taps.', date: '2023-09-15T19:00:00.000Z' }
+    ]
   },
   {
     id: '2',
@@ -57,7 +77,12 @@ const initialPubs = [
     description: 'Beautiful little pub with vaulted ceilings, offering 5 taps of craft beer.',
     rating: 4.9,
     reviews: 56,
-    totalRatingScore: 274.4
+    totalRatingScore: 274.4,
+    reviewsList: [
+      { id: 'r13', rating: 5, text: 'Incredible atmosphere. The vaulted ceilings are stunning.', date: '2023-11-20T21:00:00.000Z' },
+      { id: 'r14', rating: 5, text: 'Top tier craft beer selection. Always something new.', date: '2023-11-10T18:00:00.000Z' },
+      { id: 'r15', rating: 5, text: 'Best pub in HK. Period.', date: '2023-10-01T22:30:00.000Z' }
+    ]
   },
   {
     id: '3',
@@ -66,7 +91,11 @@ const initialPubs = [
     description: 'Traditional Czech pub atmosphere offering classic pivo.',
     rating: 4.4,
     reviews: 120,
-    totalRatingScore: 528
+    totalRatingScore: 528,
+    reviewsList: [
+      { id: 'r16', rating: 4, text: 'Classic Czech pub. Nothing fancy, just good beer.', date: '2023-10-18T16:45:00.000Z' },
+      { id: 'r17', rating: 5, text: 'Great Pilsner Urquell on tap!', date: '2023-09-22T19:15:00.000Z' }
+    ]
   },
   {
     id: '4',
@@ -75,7 +104,12 @@ const initialPubs = [
     description: 'Legendary underground spot with foosball, darts, and a cool vibe.',
     rating: 4.6,
     reviews: 200,
-    totalRatingScore: 920
+    totalRatingScore: 920,
+    reviewsList: [
+      { id: 'r18', rating: 5, text: 'Legendary spot. Great for late nights.', date: '2023-11-15T23:00:00.000Z' },
+      { id: 'r19', rating: 4, text: 'Can get smoky, but the vibe is unmatched.', date: '2023-10-05T21:30:00.000Z' },
+      { id: 'r20', rating: 5, text: 'Foosball tables are top notch!', date: '2023-11-01T20:00:00.000Z' }
+    ]
   }
 ];
 

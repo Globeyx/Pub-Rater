@@ -40,9 +40,9 @@ function renderPubCard(pub) {
     <div class="pub-reviews" style="display: flex; justify-content: space-between; align-items: center;">
         ${pub.reviews} Reviews
       </span>
-      <span class="reviews-trigger" data-id="${pub.id}" style="font-size: 0.85rem; color: var(--primary); margin-right: auto; margin-left: 12px;">
+      <button class="reviews-trigger" data-id="${pub.id}" style="background: none; border: none; font: inherit; font-size: 0.85rem; color: var(--primary); margin-right: auto; margin-left: 12px; padding: 4px; cursor: pointer; text-decoration: underline;">
         Read Reviews
-      </span>
+      </button>
       <button class="btn rate-btn" data-id="${pub.id}" style="padding: 6px 12px; font-size: 0.85rem;">Rate Pub</button>
     </div>
   `;
@@ -76,11 +76,37 @@ pubListEl.addEventListener('click', (e) => {
   }
 });
 
+// Open Pub Detail (Reviews) Modal
+const pubDetailImageContainer = document.getElementById('pubDetailImage');
+const pubDetailImage = pubDetailImageContainer.querySelector('img');
+const mapLink = document.getElementById('mapLink');
+const reviewsTitle = document.getElementById('reviewsTitle');
+
 function openReviewsModal(pubId) {
   const pubs = store.getPubs();
   const pub = pubs.find(p => p.id === pubId);
 
   if (pub) {
+    // 1. Set Title
+    reviewsTitle.textContent = pub.name;
+
+    // 2. Set Image
+    if (pub.image) {
+      pubDetailImage.src = pub.image;
+      pubDetailImageContainer.style.display = 'block';
+    } else {
+      pubDetailImageContainer.style.display = 'none';
+    }
+
+    // 3. Set Map Link
+    if (pub.mapUrl) {
+      mapLink.href = pub.mapUrl;
+      mapLink.style.display = 'flex';
+    } else {
+      mapLink.style.display = 'none';
+    }
+
+    // 4. Populate Reviews
     const reviews = pub.reviewsList || [];
     reviewsContainer.innerHTML = '';
 
