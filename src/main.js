@@ -14,7 +14,13 @@ const cancelRateBtn = document.getElementById('cancelRateBtn');
 const starRatingEl = document.getElementById('starRating');
 const ratingInput = document.getElementById('ratingInput');
 const ratePubIdInput = document.getElementById('ratePubId');
+const reviewTextInput = document.getElementById('reviewTextInput');
 const stars = starRatingEl ? starRatingEl.querySelectorAll('.star') : [];
+
+// Reviews Modal Elements
+const reviewsModal = document.getElementById('reviewsModal');
+const closeReviewsBtn = document.getElementById('closeReviewsBtn');
+const reviewsContainer = document.getElementById('reviewsContainer');
 
 // Render Logic
 function renderPubCard(pub) {
@@ -32,8 +38,10 @@ function renderPubCard(pub) {
     </div>
     <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px;">${pub.description}</p>
     <div class="pub-reviews" style="display: flex; justify-content: space-between; align-items: center;">
-      <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
         ${pub.reviews} Reviews
+      </span>
+      <span class="reviews-trigger" data-id="${pub.id}" style="font-size: 0.85rem; color: var(--primary); margin-right: auto; margin-left: 12px;">
+        Read Reviews
       </span>
       <button class="btn rate-btn" data-id="${pub.id}" style="padding: 6px 12px; font-size: 0.85rem;">Rate Pub</button>
     </div>
@@ -48,14 +56,64 @@ function renderApp() {
     pubListEl.appendChild(renderPubCard(pub));
   });
 
-  // Attach event listeners to new dynamic buttons
-  document.querySelectorAll('.rate-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const pubId = e.target.getAttribute('data-id');
-      openRateModal(pubId);
-    });
-  });
+  // No need to attach individual listeners anymore
 }
+
+// Event Delegation for Pub List
+pubListEl.addEventListener('click', (e) => {
+  const rateBtn = e.target.closest('.rate-btn');
+  const reviewsBtn = e.target.closest('.reviews-trigger');
+
+  if (rateBtn) {
+    const pubId = rateBtn.getAttribute('data-id');
+    openRateModal(pubId);
+  }
+
+  if (reviewsBtn) {
+    const pubId = reviewsBtn.getAttribute('data-id');
+    console.log('Opening reviews for:', pubId); // Debug log
+    openReviewsModal(pubId);
+  }
+});
+
+function openReviewsModal(pubId) {
+  const pubs = store.getPubs();
+  const pub = pubs.find(p => p.id === pubId);
+
+  if (pub) {
+    const reviews = pub.reviewsList || [];
+    reviewsContainer.innerHTML = '';
+
+    if (reviews.length === 0) {
+      reviewsContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No reviews yet.</p>';
+    } else {
+      reviews.forEach(review => {
+        const date = new Date(review.date).toLocaleDateString();
+        const reviewEl = document.createElement('div');
+        reviewEl.className = 'review-item';
+        reviewEl.innerHTML = `
+          <div class="review-header">
+            <span class="review-rating">★ ${review.rating}</span>
+            <span class="review-date">${date}</span>
+          </div>
+          <p class="review-text">${review.text || 'No text review.'}</p>
+        `;
+        reviewsContainer.appendChild(reviewEl);
+      });
+    }
+
+    reviewsModal.classList.add('active');
+  }
+}
+
+function closeReviewsModal() {
+  reviewsModal.classList.remove('active');
+}
+
+closeReviewsBtn?.addEventListener('click', closeReviewsModal);
+reviewsModal?.addEventListener('click', (e) => {
+  if (e.target === reviewsModal) closeReviewsModal();
+});
 
 // Modal Logic
 function openRateModal(pubId) {
@@ -132,9 +190,10 @@ ratePubForm?.addEventListener('submit', (e) => {
   e.preventDefault();
   const pubId = ratePubIdInput.value;
   const rating = parseInt(ratingInput.value);
+  const reviewText = reviewTextInput.value;
 
   if (pubId && rating) {
-    store.addRating(pubId, rating);
+    store.addRating(pubId, rating, reviewText);
     renderApp();
     closeRateModal();
   }

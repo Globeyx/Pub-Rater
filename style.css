@@ -264,3 +264,44 @@ header {
 .star:hover {
     color: var(--primary);
 }
+/* Reviews List Styling */
+.review-item {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.review-item:last-child {
+    border-bottom: none;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.review-rating {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.review-text {
+    line-height: 1.5;
+    color: var(--text-light);
+}
+
+.reviews-trigger {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.reviews-trigger:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+

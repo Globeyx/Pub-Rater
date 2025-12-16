@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'pub_rater_data_v3';
+const STORAGE_KEY = 'pub_rater_data_v4';
 
 const initialPubs = [
   {
@@ -8,7 +8,11 @@ const initialPubs = [
     description: 'Brewery in the heart of the city, restoring the tradition of HK brewing.',
     rating: 4.8,
     reviews: 150,
-    totalRatingScore: 720
+    totalRatingScore: 720,
+    reviewsList: [
+      { id: 'r1', rating: 5, text: 'Absolutely amazing beer and atmosphere!', date: '2023-10-15T14:30:00.000Z' },
+      { id: 'r2', rating: 4, text: 'Great place but gets crowded.', date: '2023-10-12T18:00:00.000Z' }
+    ]
   },
   {
     id: 'b2',
@@ -92,33 +96,46 @@ export const store = {
       id: Date.now().toString(),
       rating: 0,
       reviews: 0,
-      totalRatingScore: 0 // New field to help calculate average
+      totalRatingScore: 0,
+      reviewsList: []
     };
     pubs.unshift(newPub);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(pubs));
     return newPub;
   },
 
-  addRating(pubId, ratingValue) {
+  addRating(pubId, ratingValue, reviewText = '') {
     const pubs = this.getPubs();
     const pubIndex = pubs.findIndex(p => p.id === pubId);
 
     if (pubIndex > -1) {
       const pub = pubs[pubIndex];
 
-      // Handle migration for old data if needed or initialize
+      // Handle migration for old data
       const currentReviews = pub.reviews || 0;
       const currentTotalScore = pub.totalRatingScore || (pub.rating * currentReviews);
+      const currentReviewsList = pub.reviewsList || [];
 
       const newReviews = currentReviews + 1;
       const newTotalScore = currentTotalScore + ratingValue;
       const newAverage = newTotalScore / newReviews;
 
+      // Create new review object
+      if (ratingValue > 0) {
+        currentReviewsList.unshift({
+          id: Date.now().toString(),
+          rating: ratingValue,
+          text: reviewText,
+          date: new Date().toISOString()
+        });
+      }
+
       const updatedPub = {
         ...pub,
         reviews: newReviews,
         totalRatingScore: newTotalScore,
-        rating: parseFloat(newAverage.toFixed(1))
+        rating: parseFloat(newAverage.toFixed(1)),
+        reviewsList: currentReviewsList
       };
 
       pubs[pubIndex] = updatedPub;
