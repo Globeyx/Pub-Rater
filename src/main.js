@@ -32,8 +32,11 @@ function renderPubCard(pub) {
         <h3 class="pub-name">${pub.name}</h3>
         <span class="pub-location">📍 ${pub.location}</span>
       </div>
-      <div class="rating-badge">
-        ★ ${pub.rating > 0 ? pub.rating.toFixed(1) : '-'}
+      <div style="display: flex; align-items: center;">
+        <div class="rating-badge">
+          ★ ${pub.rating > 0 ? pub.rating.toFixed(1) : '-'}
+        </div>
+        <button class="delete-btn" data-id="${pub.id}" title="Delete Pub">×</button>
       </div>
     </div>
     <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px;">${pub.description}</p>
@@ -73,6 +76,15 @@ pubListEl.addEventListener('click', (e) => {
     const pubId = reviewsBtn.getAttribute('data-id');
     console.log('Opening reviews for:', pubId); // Debug log
     openReviewsModal(pubId);
+  }
+
+  const deleteBtn = e.target.closest('.delete-btn');
+  if (deleteBtn) {
+    if (confirm('Are you sure you want to delete this pub?')) {
+      const pubId = deleteBtn.getAttribute('data-id');
+      store.deletePub(pubId);
+      renderApp();
+    }
   }
 });
 

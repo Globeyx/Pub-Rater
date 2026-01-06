@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* PREVIEW MODE STYLE */
+        /* PREVIEW MODE STYLE - MIRRORS style.css */
         :root {
             /* Premium Dark Theme Palette */
             --bg-body: #0a0a0c;
@@ -18,6 +18,9 @@
             --primary: #f59e0b;
             --primary-hover: #d97706;
             --accent: #6366f1;
+            /* Indigo */
+            --danger: #ef4444;
+            /* Red */
             --text-main: #ffffff;
             --text-muted: #9ca3af;
             --border-light: rgba(255, 255, 255, 0.08);
@@ -260,6 +263,103 @@
         .star:hover {
             color: var(--primary);
         }
+
+        /* Modal Image & Actions */
+        .modal-image-container {
+            width: 100%;
+            height: 250px;
+            background-color: var(--bg-surface);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-light);
+            display: none;
+            /* Controlled by JS */
+        }
+
+        .modal-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .modal-image-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .modal-image-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+            pointer-events: none;
+        }
+
+        .pub-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .modal-action-btn {
+            flex: 1;
+            justify-content: center;
+            text-decoration: none;
+            display: none;
+            /* Controlled by JS */
+            height: 48px;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .modal-action-btn:hover {
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Reviews Scrollbar Polish */
+        #reviewsContainer {
+            padding-right: 8px;
+        }
+
+        #reviewsContainer::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #reviewsContainer::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #reviewsContainer::-webkit-scrollbar-thumb {
+            background-color: var(--border-light);
+            border-radius: 20px;
+        }
+
+        #reviewsContainer::-webkit-scrollbar-thumb:hover {
+            background-color: var(--text-muted);
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: var(--border-light);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            margin-left: 8px;
+        }
+
+        .delete-btn:hover {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
     </style>
 </head>
 
@@ -314,6 +414,8 @@
             </form>
         </div>
     </div>
+
+    <!-- Rate Pub Modal -->
     <div id="ratePubModal" class="modal-overlay">
         <div class="modal-content">
             <h2 style="margin-bottom: 24px;">Rate this Pub</h2>
@@ -332,7 +434,8 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Review (Optional)</label>
-                    <textarea name="reviewText" class="form-textarea" rows="3" placeholder="Any thoughts?"></textarea>
+                    <textarea name="reviewText" id="reviewTextInput" class="form-textarea" rows="3"
+                        placeholder="Any thoughts?"></textarea>
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px;">
                     <button type="button" class="btn" id="cancelRateBtn">Cancel</button>
@@ -342,11 +445,35 @@
         </div>
     </div>
 
+    <!-- Pub Detail Modal -->
+    <div class="modal-overlay" id="reviewsModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 id="reviewsTitle" style="margin-bottom: 20px;">Pub Details</h2>
+
+            <div id="pubDetailImage" class="modal-image-container">
+                <img src="" alt="Pub Interior">
+            </div>
+
+            <div class="pub-actions">
+                <a id="mapLink" href="#" target="_blank" class="btn btn-primary modal-action-btn">
+                    📍 View on Map
+                </a>
+            </div>
+
+            <h3 style="margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px;">
+                Reviews</h3>
+            <div id="reviewsContainer" style="max-height: 400px; overflow-y: auto;">
+                <!-- Reviews will be populated here -->
+            </div>
+            <button class="btn" id="closeReviewsBtn" style="width: 100%; margin-top: 20px;">Close</button>
+        </div>
+    </div>
+
     <script>
-        // PREVIEW MODE SCRIPT (Bundled)
+        // PREVIEW MODE SCRIPT - MIRRORS main.js & store.js
 
         // Store Logic
-        const STORAGE_KEY = 'pub_rater_data_v3';
+        const STORAGE_KEY = 'pub_rater_data_v7';
         const initialPubs = [
             {
                 id: 'b1',
@@ -354,8 +481,15 @@
                 location: 'Velké náměstí 25, Hradec Králové',
                 description: 'Brewery in the heart of the city, restoring the tradition of HK brewing.',
                 rating: 4.8,
-                reviews: 150,
-                totalRatingScore: 720
+                reviews: 153,
+                totalRatingScore: 734.4,
+                image: 'public/images/pubs/klenot.png',
+                mapUrl: 'https://maps.google.com/?q=Velké+náměstí+25,+Hradec+Králové',
+                reviewsList: [
+                    { id: 'r1', rating: 5, text: 'Absolutely amazing beer and atmosphere! The interior is stunning.', date: '2023-10-15T14:30:00.000Z' },
+                    { id: 'r2', rating: 4, text: 'Great place but gets crowded on weekends.', date: '2023-10-12T18:00:00.000Z' },
+                    { id: 'r3', rating: 5, text: 'Best Lager in town, hands down. Highly recommend the 11°.', date: '2023-09-28T20:15:00.000Z' }
+                ]
             },
             {
                 id: 'b2',
@@ -363,8 +497,14 @@
                 location: 'Hradec Králové - Kukleny',
                 description: 'Family brewery specializing in honest craft lagers and specials.',
                 rating: 4.7,
-                reviews: 45,
-                totalRatingScore: 211.5
+                reviews: 47,
+                totalRatingScore: 220.9,
+                image: null,
+                mapUrl: 'https://maps.google.com/?q=Hradec+Králové+Kukleny+Pivovar+713',
+                reviewsList: [
+                    { id: 'r4', rating: 5, text: 'Hidden gem in Kukleny. The owners are lovely people who care about beer.', date: '2023-11-01T16:00:00.000Z' },
+                    { id: 'r5', rating: 4, text: 'A bit out of the way, but worth the trip for the specials.', date: '2023-10-20T19:30:00.000Z' }
+                ]
             },
             {
                 id: 'b3',
@@ -373,7 +513,12 @@
                 description: 'Microbrewery offering unpasteurized beers like Jehně and Beran.',
                 rating: 4.6,
                 reviews: 98,
-                totalRatingScore: 450.8
+                totalRatingScore: 450.8,
+                image: null,
+                mapUrl: 'https://maps.google.com/?q=Pivovar+Beránek+Stěžery',
+                reviewsList: [
+                    { id: 'r6', rating: 5, text: 'Their "Beran" dark lager is a must-try!', date: '2023-10-05T15:45:00.000Z' }
+                ]
             },
             {
                 id: 'b4',
@@ -382,7 +527,12 @@
                 description: 'Small local brewery focusing on quality ingredients.',
                 rating: 4.5,
                 reviews: 32,
-                totalRatingScore: 144
+                totalRatingScore: 144,
+                image: null,
+                mapUrl: 'https://maps.google.com/?q=Minipivovar+Kubík+Hradec+Králové',
+                reviewsList: [
+                    { id: 'r9', rating: 4, text: 'Solid beers, though the menu is limited.', date: '2023-10-30T17:00:00.000Z' }
+                ]
             },
             {
                 id: '1',
@@ -391,7 +541,13 @@
                 description: 'Excellent beer in the heart of the city with a friendly environment.',
                 rating: 4.7,
                 reviews: 82,
-                totalRatingScore: 385.4
+                totalRatingScore: 385.4,
+                image: null,
+                mapUrl: 'https://maps.google.com/?q=Pivovarská+Brána+Hradec+Králové',
+                reviewsList: [
+                    { id: 'r11', rating: 5, text: 'My favorite spot on the square.', date: '2023-10-25T20:00:00.000Z' },
+                    { id: 'r12', rating: 4, text: 'Good selection of rotating taps.', date: '2023-09-15T19:00:00.000Z' }
+                ]
             },
             {
                 id: '2',
@@ -399,8 +555,13 @@
                 location: 'Hradec Králové - Center',
                 description: 'Beautiful little pub with vaulted ceilings, offering 5 taps of craft beer.',
                 rating: 4.9,
-                reviews: 56,
-                totalRatingScore: 274.4
+                reviews: 58,
+                totalRatingScore: 284.2,
+                image: null,
+                mapUrl: 'https://maps.google.com/?q=na+JEDNO+Hradec+Králové',
+                reviewsList: [
+                    { id: 'r13', rating: 5, text: 'Incredible atmosphere. The vaulted ceilings are stunning.', date: '2023-11-20T21:00:00.000Z' }
+                ]
             },
             {
                 id: '3',
@@ -409,7 +570,12 @@
                 description: 'Traditional Czech pub atmosphere offering classic pivo.',
                 rating: 4.4,
                 reviews: 120,
-                totalRatingScore: 528
+                totalRatingScore: 528,
+                image: null,
+                mapUrl: 'https://maps.google.com/?q=Hostinec+U+Kohouta+Hradec+Králové',
+                reviewsList: [
+                    { id: 'r16', rating: 4, text: 'Classic Czech pub. Nothing fancy, just good beer.', date: '2023-10-18T16:45:00.000Z' }
+                ]
             },
             {
                 id: '4',
@@ -418,7 +584,12 @@
                 description: 'Legendary underground spot with foosball, darts, and a cool vibe.',
                 rating: 4.6,
                 reviews: 200,
-                totalRatingScore: 920
+                totalRatingScore: 920,
+                image: null,
+                mapUrl: 'https://maps.google.com/?q=Batalion+u+Draků+Hradec+Králové',
+                reviewsList: [
+                    { id: 'r18', rating: 5, text: 'Legendary spot. Great for late nights.', date: '2023-11-15T23:00:00.000Z' }
+                ]
             }
         ];
 
@@ -439,14 +610,15 @@
                     id: Date.now().toString(),
                     rating: 0,
                     reviews: 0,
-                    totalRatingScore: 0
+                    totalRatingScore: 0,
+                    reviewsList: []
                 };
                 pubs.unshift(newPub);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(pubs));
                 return newPub;
             },
 
-            addRating(pubId, ratingValue) {
+            addRating(pubId, ratingValue, reviewText = '') {
                 const pubs = this.getPubs();
                 const pubIndex = pubs.findIndex(p => p.id === pubId);
 
@@ -454,22 +626,39 @@
                     const pub = pubs[pubIndex];
                     const currentReviews = pub.reviews || 0;
                     const currentTotalScore = pub.totalRatingScore || (pub.rating * currentReviews);
+                    const currentReviewsList = pub.reviewsList || [];
 
                     const newReviews = currentReviews + 1;
                     const newTotalScore = currentTotalScore + ratingValue;
                     const newAverage = newTotalScore / newReviews;
 
+                    if (ratingValue > 0) {
+                        currentReviewsList.unshift({
+                            id: Date.now().toString(),
+                            rating: ratingValue,
+                            text: reviewText,
+                            date: new Date().toISOString()
+                        });
+                    }
+
                     const updatedPub = {
                         ...pub,
                         reviews: newReviews,
                         totalRatingScore: newTotalScore,
-                        rating: parseFloat(newAverage.toFixed(1))
+                        rating: parseFloat(newAverage.toFixed(1)),
+                        reviewsList: currentReviewsList
                     };
 
                     pubs[pubIndex] = updatedPub;
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(pubs));
                     return updatedPub;
                 }
+            },
+
+            deletePub(id) {
+                const pubs = this.getPubs();
+                const filteredPubs = pubs.filter(p => p.id !== id);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredPubs));
             }
         };
 
@@ -487,29 +676,45 @@
         const starRatingEl = document.getElementById('starRating');
         const ratingInput = document.getElementById('ratingInput');
         const ratePubIdInput = document.getElementById('ratePubId');
+        const reviewTextInput = document.getElementById('reviewTextInput');
         const stars = starRatingEl ? starRatingEl.querySelectorAll('.star') : [];
+
+        // Reviews Modal Elements
+        const reviewsModal = document.getElementById('reviewsModal');
+        const closeReviewsBtn = document.getElementById('closeReviewsBtn');
+        const reviewsContainer = document.getElementById('reviewsContainer');
+        const pubDetailImageContainer = document.getElementById('pubDetailImage');
+        const pubDetailImage = pubDetailImageContainer.querySelector('img');
+        const mapLink = document.getElementById('mapLink');
+        const reviewsTitle = document.getElementById('reviewsTitle');
 
         function renderPubCard(pub) {
             const card = document.createElement('div');
             card.className = 'pub-card';
             card.innerHTML = `
-        <div class="pub-header">
-        <div>
-            <h3 class="pub-name">${pub.name}</h3>
-            <span class="pub-location">📍 ${pub.location}</span>
-        </div>
-        <div class="rating-badge">
-            ★ ${pub.rating > 0 ? pub.rating.toFixed(1) : '-'}
-        </div>
-        </div>
-        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px;">${pub.description}</p>
-        <div class="pub-reviews" style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
-            ${pub.reviews} Reviews
-        </span>
-        <button class="btn rate-btn" data-id="${pub.id}" style="padding: 6px 12px; font-size: 0.85rem;">Rate Pub</button>
-        </div>
-    `;
+                <div class="pub-header">
+                <div>
+                    <h3 class="pub-name">${pub.name}</h3>
+                    <span class="pub-location">📍 ${pub.location}</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <div class="rating-badge">
+                        ★ ${pub.rating > 0 ? pub.rating.toFixed(1) : '-'}
+                    </div>
+                    <button class="delete-btn" data-id="${pub.id}" title="Delete Pub">×</button>
+                </div>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px;">${pub.description}</p>
+                <div class="pub-reviews" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
+                        ${pub.reviews} Reviews
+                    </span>
+                    <button class="reviews-trigger" data-id="${pub.id}" style="background: none; border: none; font: inherit; font-size: 0.85rem; color: var(--primary); margin-right: auto; margin-left: 12px; padding: 4px; cursor: pointer; text-decoration: underline;">
+                        View Details
+                    </button>
+                    <button class="btn rate-btn" data-id="${pub.id}" style="padding: 6px 12px; font-size: 0.85rem;">Rate Pub</button>
+                </div>
+            `;
             return card;
         }
 
@@ -519,14 +724,33 @@
             pubs.forEach(pub => {
                 pubListEl.appendChild(renderPubCard(pub));
             });
-
-            document.querySelectorAll('.rate-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const pubId = e.target.getAttribute('data-id');
-                    openRateModal(pubId);
-                });
-            });
+            // Global listener approach in main.js used delegation, here we can use what's consistent
         }
+
+        // Event Delegation
+        pubListEl.addEventListener('click', (e) => {
+            const rateBtn = e.target.closest('.rate-btn');
+            const reviewsBtn = e.target.closest('.reviews-trigger');
+            const deleteBtn = e.target.closest('.delete-btn');
+
+            if (rateBtn) {
+                const pubId = rateBtn.getAttribute('data-id');
+                openRateModal(pubId);
+            }
+
+            if (reviewsBtn) {
+                const pubId = reviewsBtn.getAttribute('data-id');
+                openReviewsModal(pubId);
+            }
+
+            if (deleteBtn) {
+                if (confirm('Are you sure you want to delete this pub?')) {
+                    const pubId = deleteBtn.getAttribute('data-id');
+                    store.deletePub(pubId);
+                    renderApp();
+                }
+            }
+        });
 
         function openRateModal(pubId) {
             ratePubIdInput.value = pubId;
@@ -539,6 +763,56 @@
             ratePubModal.classList.remove('active');
             ratePubForm.reset();
             updateStarDisplay(0);
+        }
+
+        function openReviewsModal(pubId) {
+            const pubs = store.getPubs();
+            const pub = pubs.find(p => p.id === pubId);
+
+            if (pub) {
+                reviewsTitle.textContent = pub.name;
+
+                if (pub.image) {
+                    pubDetailImage.src = pub.image;
+                    pubDetailImageContainer.style.display = 'block';
+                } else {
+                    pubDetailImageContainer.style.display = 'none';
+                }
+
+                if (pub.mapUrl) {
+                    mapLink.href = pub.mapUrl;
+                    mapLink.style.display = 'flex';
+                } else {
+                    mapLink.style.display = 'none';
+                }
+
+                const reviews = pub.reviewsList || [];
+                reviewsContainer.innerHTML = '';
+
+                if (reviews.length === 0) {
+                    reviewsContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No reviews yet.</p>';
+                } else {
+                    reviews.forEach(review => {
+                        const date = new Date(review.date).toLocaleDateString();
+                        const reviewEl = document.createElement('div');
+                        reviewEl.style.padding = '16px 0';
+                        reviewEl.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+                        reviewEl.innerHTML = `
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--primary); font-weight: 600;">★ ${review.rating}</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">${date}</span>
+                  </div>
+                  <p style="line-height: 1.5; color: var(--text-main);">${review.text || 'No text review.'}</p>
+                `;
+                        reviewsContainer.appendChild(reviewEl);
+                    });
+                }
+                reviewsModal.classList.add('active');
+            }
+        }
+
+        function closeReviewsModal() {
+            reviewsModal.classList.remove('active');
         }
 
         function updateStarDisplay(rating) {
@@ -587,6 +861,12 @@
             if (e.target === ratePubModal) closeRateModal();
         });
 
+        reviewsModal?.addEventListener('click', (e) => {
+            if (e.target === reviewsModal) closeReviewsModal();
+        });
+
+        closeReviewsBtn?.addEventListener('click', closeReviewsModal);
+
         starRatingEl?.addEventListener('click', (e) => {
             if (e.target.classList.contains('star')) {
                 const rating = parseInt(e.target.getAttribute('data-rating'));
@@ -599,9 +879,10 @@
             e.preventDefault();
             const pubId = ratePubIdInput.value;
             const rating = parseInt(ratingInput.value);
+            const reviewText = reviewTextInput.value;
 
             if (pubId && rating) {
-                store.addRating(pubId, rating);
+                store.addRating(pubId, rating, reviewText);
                 renderApp();
                 closeRateModal();
             }

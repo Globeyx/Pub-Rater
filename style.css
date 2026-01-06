@@ -8,6 +8,8 @@
     --primary-hover: #d97706;
     --accent: #6366f1;
     /* Indigo */
+    --danger: #ef4444;
+    /* Red */
     --text-main: #ffffff;
     --text-muted: #9ca3af;
     --border-light: rgba(255, 255, 255, 0.08);
@@ -264,6 +266,7 @@ header {
 .star:hover {
     color: var(--primary);
 }
+
 /* Reviews List Styling */
 .review-item {
     padding: 16px 0;
@@ -305,3 +308,101 @@ header {
     text-decoration: underline;
 }
 
+
+/* Modal Image & Actions */
+.modal-image-container {
+    width: 100%;
+    height: 250px;
+    background-color: var(--bg-surface);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-light);
+    display: none;
+    /* Controlled by JS */
+}
+
+.modal-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.modal-image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Overlay gradient for image to make it look premium */
+.modal-image-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+    pointer-events: none;
+}
+
+.pub-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.modal-action-btn {
+    flex: 1;
+    justify-content: center;
+    text-decoration: none;
+    display: none;
+    /* Controlled by JS */
+    height: 48px;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+.modal-action-btn:hover {
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Reviews Scrollbar Polish */
+#reviewsContainer {
+    padding-right: 8px;
+}
+
+#reviewsContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+#reviewsContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#reviewsContainer::-webkit-scrollbar-thumb {
+    background-color: var(--border-light);
+    border-radius: 20px;
+}
+
+#reviewsContainer::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-muted);
+}
+
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--border-light);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+
+.delete-btn:hover {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+}

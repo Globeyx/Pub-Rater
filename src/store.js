@@ -193,5 +193,11 @@ export const store = {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(pubs));
       return updatedPub;
     }
+  },
+
+  deletePub(id) {
+    const pubs = this.getPubs();
+    const filteredPubs = pubs.filter(p => p.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredPubs));
   }
 };
