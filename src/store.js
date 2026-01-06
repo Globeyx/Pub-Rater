@@ -23,6 +23,7 @@ export const store = {
 
     if (error) {
       console.error('Error fetching pubs:', error);
+      alert('Chyba při načítání dat z databáze:\n' + error.message + '\n\nZkontroluj Console (F12) pro více detailů.');
       return [];
     }
 

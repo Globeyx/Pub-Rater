@@ -53,13 +53,23 @@ function renderPubCard(pub) {
 }
 
 function renderApp() {
-  const pubs = store.getPubs();
+  const pubs = store.getPubs(); // Získáme data ze storu
   pubListEl.innerHTML = '';
+
+  if (!pubs || pubs.length === 0) {
+    pubListEl.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px; grid-column: 1 / -1; color: var(--text-muted);">
+                <h2 style="margin-bottom: 10px; color: var(--danger);">Žádné hospody nenalezeny</h2>
+                <p>Buď je databáze prázdná, nebo se nepodařilo spojit se serverem.</p>
+                <p style="font-size: 0.9em; margin-top: 10px;">Pokud jsi vývojář: Zkontroluj JS Console a jestli jsi spustil 'seed_data.sql'.</p>
+            </div>
+        `;
+    return;
+  }
+
   pubs.forEach(pub => {
     pubListEl.appendChild(renderPubCard(pub));
   });
-
-  // No need to attach individual listeners anymore
 }
 
 // Event Delegation for Pub List
