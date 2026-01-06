@@ -1,203 +1,141 @@
-const STORAGE_KEY = 'pub_rater_data_v7';
-
-const initialPubs = [
-  {
-    id: 'b1',
-    name: 'Hradecký Klenot',
-    location: 'Velké náměstí 25, Hradec Králové',
-    description: 'Brewery in the heart of the city, restoring the tradition of HK brewing.',
-    rating: 4.8,
-    reviews: 153,
-    totalRatingScore: 734.4,
-    image: '/public/images/pubs/klenot.png',
-    mapUrl: 'https://maps.google.com/?q=Velké+náměstí+25,+Hradec+Králové',
-    reviewsList: [
-      { id: 'r1', rating: 5, text: 'Absolutely amazing beer and atmosphere! The interior is stunning.', date: '2023-10-15T14:30:00.000Z' },
-      { id: 'r2', rating: 4, text: 'Great place but gets crowded on weekends.', date: '2023-10-12T18:00:00.000Z' },
-      { id: 'r3', rating: 5, text: 'Best Lager in town, hands down. Highly recommend the 11°.', date: '2023-09-28T20:15:00.000Z' },
-      { id: 'rX1', rating: 5, text: 'Staff was very attentive even during rush hour.', date: '2023-11-20T19:00:00.000Z' }
-    ]
-  },
-  {
-    id: 'b2',
-    name: 'Rodinný pivovar 713',
-    location: 'Hradec Králové - Kukleny',
-    description: 'Family brewery specializing in honest craft lagers and specials.',
-    rating: 4.7,
-    reviews: 47,
-    totalRatingScore: 220.9,
-    image: null,
-    mapUrl: 'https://maps.google.com/?q=Hradec+Králové+Kukleny+Pivovar+713',
-    reviewsList: [
-      { id: 'r4', rating: 5, text: 'Hidden gem in Kukleny. The owners are lovely people who care about beer.', date: '2023-11-01T16:00:00.000Z' },
-      { id: 'r5', rating: 4, text: 'A bit out of the way, but worth the trip for the specials.', date: '2023-10-20T19:30:00.000Z' },
-      { id: 'rX2', rating: 5, text: 'Their IPA is surprisingly good for a traditional lager brewery.', date: '2023-12-01T18:00:00.000Z' }
-    ]
-  },
-  {
-    id: 'b3',
-    name: 'Pivovar Beránek',
-    location: 'Stěžery (near HK)',
-    description: 'Microbrewery offering unpasteurized beers like Jehně and Beran.',
-    rating: 4.6,
-    reviews: 98,
-    totalRatingScore: 450.8,
-    image: null,
-    mapUrl: 'https://maps.google.com/?q=Pivovar+Beránek+Stěžery',
-    reviewsList: [
-      { id: 'r6', rating: 5, text: 'Their "Beran" dark lager is a must-try! Perfect balance.', date: '2023-10-05T15:45:00.000Z' },
-      { id: 'r7', rating: 4, text: 'Nice garden for summer, cozy inside for winter.', date: '2023-09-10T12:00:00.000Z' },
-      { id: 'r8', rating: 5, text: 'Great food to go with the beer.', date: '2023-11-12T13:30:00.000Z' }
-    ]
-  },
-  {
-    id: 'b4',
-    name: 'Minipivovar Kubík',
-    location: 'Profesora Smotlachy, Hradec Králové',
-    description: 'Small local brewery focusing on quality ingredients.',
-    rating: 4.5,
-    reviews: 32,
-    totalRatingScore: 144,
-    image: null,
-    mapUrl: 'https://maps.google.com/?q=Minipivovar+Kubík+Hradec+Králové',
-    reviewsList: [
-      { id: 'r9', rating: 4, text: 'Solid beers, though the menu is limited.', date: '2023-10-30T17:00:00.000Z' },
-      { id: 'r10', rating: 5, text: 'Friendly staff and quick service.', date: '2023-11-05T18:20:00.000Z' }
-    ]
-  },
-  {
-    id: '1',
-    name: 'Pivovarská Brána',
-    location: 'Hradec Králové - Velké náměstí',
-    description: 'Excellent beer in the heart of the city with a friendly environment.',
-    rating: 4.7,
-    reviews: 82,
-    totalRatingScore: 385.4,
-    image: null,
-    mapUrl: 'https://maps.google.com/?q=Pivovarská+Brána+Hradec+Králové',
-    reviewsList: [
-      { id: 'r11', rating: 5, text: 'My favorite spot on the square. Always lively.', date: '2023-10-25T20:00:00.000Z' },
-      { id: 'r12', rating: 4, text: 'Good selection of rotating taps from various breweries.', date: '2023-09-15T19:00:00.000Z' }
-    ]
-  },
-  {
-    id: '2',
-    name: 'na JEDNO',
-    location: 'Hradec Králové - Center',
-    description: 'Beautiful little pub with vaulted ceilings, offering 5 taps of craft beer.',
-    rating: 4.9,
-    reviews: 58,
-    totalRatingScore: 284.2,
-    image: null,
-    mapUrl: 'https://maps.google.com/?q=na+JEDNO+Hradec+Králové',
-    reviewsList: [
-      { id: 'r13', rating: 5, text: 'Incredible atmosphere. The vaulted ceilings are stunning.', date: '2023-11-20T21:00:00.000Z' },
-      { id: 'r14', rating: 5, text: 'Top tier craft beer selection. Always something new.', date: '2023-11-10T18:00:00.000Z' },
-      { id: 'r15', rating: 5, text: 'Best pub in HK. Period.', date: '2023-10-01T22:30:00.000Z' },
-      { id: 'rX3', rating: 5, text: 'Small place but huge heart. Love the rotating taps.', date: '2023-12-05T20:00:00.000Z' }
-    ]
-  },
-  {
-    id: '3',
-    name: 'Hostinec U Kohouta',
-    location: 'Hradec Králové',
-    description: 'Traditional Czech pub atmosphere offering classic pivo.',
-    rating: 4.4,
-    reviews: 120,
-    totalRatingScore: 528,
-    image: null,
-    mapUrl: 'https://maps.google.com/?q=Hostinec+U+Kohouta+Hradec+Králové',
-    reviewsList: [
-      { id: 'r16', rating: 4, text: 'Classic Czech pub. Nothing fancy, just good beer.', date: '2023-10-18T16:45:00.000Z' },
-      { id: 'r17', rating: 5, text: 'Great Pilsner Urquell on tap! It is treated well here.', date: '2023-09-22T19:15:00.000Z' }
-    ]
-  },
-  {
-    id: '4',
-    name: 'Batalion u Draků',
-    location: 'Hradec Králové - Old Town',
-    description: 'Legendary underground spot with foosball, darts, and a cool vibe.',
-    rating: 4.6,
-    reviews: 200,
-    totalRatingScore: 920,
-    image: null,
-    mapUrl: 'https://maps.google.com/?q=Batalion+u+Draků+Hradec+Králové',
-    reviewsList: [
-      { id: 'r18', rating: 5, text: 'Legendary spot. Great for late nights.', date: '2023-11-15T23:00:00.000Z' },
-      { id: 'r19', rating: 4, text: 'Can get smoky, but the vibe is unmatched.', date: '2023-10-05T21:30:00.000Z' },
-      { id: 'r20', rating: 5, text: 'Foosball tables are top notch!', date: '2023-11-01T20:00:00.000Z' }
-    ]
-  }
-];
+import { supabase } from './supabaseClient.js';
 
 export const store = {
-  getPubs() {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (!data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPubs));
-      return initialPubs;
+  // Stav aplikace (lokální cache)
+  state: {
+    pubs: []
+  },
+
+  // Načtení všech hospod z databáze
+  async fetchPubs() {
+    const { data, error } = await supabase
+      .from('pubs')
+      .select(`
+        *,
+        reviews (
+          id,
+          rating,
+          text,
+          created_at
+        )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching pubs:', error);
+      return [];
     }
-    return JSON.parse(data);
-  },
 
-  addPub(pub) {
-    const pubs = this.getPubs();
-    const newPub = {
-      ...pub,
-      id: Date.now().toString(),
-      rating: 0,
-      reviews: 0,
-      totalRatingScore: 0,
-      reviewsList: []
-    };
-    pubs.unshift(newPub);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(pubs));
-    return newPub;
-  },
+    // Zpracování dat pro frontend (přidáme průměrné hodnocení, pokud není v DB kalkulováno)
+    this.state.pubs = data.map(pub => {
+      // Supabase vrací reviews jako pole objektů
+      const reviewsList = pub.reviews || [];
+      // Seřadíme recenze od nejnovější
+      reviewsList.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-  addRating(pubId, ratingValue, reviewText = '') {
-    const pubs = this.getPubs();
-    const pubIndex = pubs.findIndex(p => p.id === pubId);
-
-    if (pubIndex > -1) {
-      const pub = pubs[pubIndex];
-
-      // Handle migration for old data
-      const currentReviews = pub.reviews || 0;
-      const currentTotalScore = pub.totalRatingScore || (pub.rating * currentReviews);
-      const currentReviewsList = pub.reviewsList || [];
-
-      const newReviews = currentReviews + 1;
-      const newTotalScore = currentTotalScore + ratingValue;
-      const newAverage = newTotalScore / newReviews;
-
-      // Create new review object
-      if (ratingValue > 0) {
-        currentReviewsList.unshift({
-          id: Date.now().toString(),
-          rating: ratingValue,
-          text: reviewText,
-          date: new Date().toISOString()
-        });
-      }
-
-      const updatedPub = {
+      return {
         ...pub,
-        reviews: newReviews,
-        totalRatingScore: newTotalScore,
-        rating: parseFloat(newAverage.toFixed(1)),
-        reviewsList: currentReviewsList
+        reviewsList: reviewsList,
+        // Pro zpětnou kompatibilitu s frontendem
+        reviews: pub.reviews_count,
+        rating: pub.rating
       };
+    });
 
-      pubs[pubIndex] = updatedPub;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(pubs));
-      return updatedPub;
-    }
+    return this.state.pubs;
   },
 
-  deletePub(id) {
-    const pubs = this.getPubs();
-    const filteredPubs = pubs.filter(p => p.id !== id);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredPubs));
+  getPubs() {
+    return this.state.pubs;
+  },
+
+  async addPub(pubData) {
+    // Vložíme do DB
+    const { data, error } = await supabase
+      .from('pubs')
+      .insert([
+        {
+          name: pubData.name,
+          location: pubData.location,
+          description: pubData.description
+        }
+      ])
+      .select();
+
+    if (error) {
+      console.error('Error adding pub:', error);
+      alert('Failed to add pub');
+      return null;
+    }
+
+    // Obnovíme lokální data
+    await this.fetchPubs();
+    return data[0];
+  },
+
+  async deletePub(pubId) {
+    const { error } = await supabase
+      .from('pubs')
+      .delete()
+      .eq('id', pubId);
+
+    if (error) {
+      console.error('Error deleting pub:', error);
+      alert('Failed to delete pub');
+      return;
+    }
+
+    // Obnovíme lokální data
+    await this.fetchPubs();
+  },
+
+  async addRating(pubId, ratingValue, reviewText = '') {
+    // 1. Vložit recenzi
+    const { error: reviewError } = await supabase
+      .from('reviews')
+      .insert([
+        {
+          pub_id: pubId,
+          rating: ratingValue,
+          text: reviewText
+        }
+      ]);
+
+    if (reviewError) {
+      console.error('Error adding review:', reviewError);
+      return;
+    }
+
+    // 2. Přepočítat průměr (naivně - ideálně by to dělala databázová funkce/trigger)
+    // Pro jednoduchost teď jen znovu načteme celou hospodu a její recenze a spočítáme to
+    // V produkci bychom použili RPC funkci nebo trigger v databázi.
+
+    // Získáme aktuální data
+    const { data: pubData } = await supabase
+      .from('pubs')
+      .select('rating, reviews_count, total_rating_score')
+      .eq('id', pubId)
+      .single();
+
+    const newCount = (pubData.reviews_count || 0) + 1;
+    const newTotalScore = (parseFloat(pubData.total_rating_score) || 0) + ratingValue;
+    const newAverage = newTotalScore / newCount;
+
+    // Aktualizujeme hospodu
+    const { error: updateError } = await supabase
+      .from('pubs')
+      .update({
+        rating: parseFloat(newAverage.toFixed(1)),
+        reviews_count: newCount,
+        total_rating_score: newTotalScore
+      })
+      .eq('id', pubId);
+
+    if (updateError) {
+      console.error('Error updating pub stats:', updateError);
+    }
+
+    // Obnovíme data v aplikaci
+    await this.fetchPubs();
   }
 };

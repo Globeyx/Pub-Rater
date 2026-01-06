@@ -82,11 +82,16 @@ pubListEl.addEventListener('click', (e) => {
   if (deleteBtn) {
     if (confirm('Are you sure you want to delete this pub?')) {
       const pubId = deleteBtn.getAttribute('data-id');
-      store.deletePub(pubId);
-      renderApp();
+      handleDelete(pubId);
     }
   }
 });
+
+async function handleDelete(pubId) {
+  await store.deletePub(pubId);
+  renderApp();
+}
+
 
 // Open Pub Detail (Reviews) Modal
 const pubDetailImageContainer = document.getElementById('pubDetailImage');
@@ -103,16 +108,16 @@ function openReviewsModal(pubId) {
     reviewsTitle.textContent = pub.name;
 
     // 2. Set Image
-    if (pub.image) {
-      pubDetailImage.src = pub.image;
+    if (pub.image_url) {
+      pubDetailImage.src = pub.image_url;
       pubDetailImageContainer.style.display = 'block';
     } else {
       pubDetailImageContainer.style.display = 'none';
     }
 
     // 3. Set Map Link
-    if (pub.mapUrl) {
-      mapLink.href = pub.mapUrl;
+    if (pub.map_url) {
+      mapLink.href = pub.map_url;
       mapLink.style.display = 'flex';
     } else {
       mapLink.style.display = 'none';
@@ -126,7 +131,7 @@ function openReviewsModal(pubId) {
       reviewsContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No reviews yet.</p>';
     } else {
       reviews.forEach(review => {
-        const date = new Date(review.date).toLocaleDateString();
+        const date = new Date(review.created_at).toLocaleDateString();
         const reviewEl = document.createElement('div');
         reviewEl.className = 'review-item';
         reviewEl.innerHTML = `
@@ -195,7 +200,7 @@ addPubModal?.addEventListener('click', (e) => {
   if (e.target === addPubModal) closeAddModal();
 });
 
-addPubForm?.addEventListener('submit', (e) => {
+addPubForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(addPubForm);
   const newPub = {
@@ -204,7 +209,7 @@ addPubForm?.addEventListener('submit', (e) => {
     description: formData.get('description')
   };
 
-  store.addPub(newPub);
+  await store.addPub(newPub);
   renderApp();
   closeAddModal();
 });
@@ -224,18 +229,24 @@ starRatingEl?.addEventListener('click', (e) => {
   }
 });
 
-ratePubForm?.addEventListener('submit', (e) => {
+ratePubForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const pubId = ratePubIdInput.value;
   const rating = parseInt(ratingInput.value);
   const reviewText = reviewTextInput.value;
 
   if (pubId && rating) {
-    store.addRating(pubId, rating, reviewText);
+    await store.addRating(pubId, rating, reviewText);
     renderApp();
     closeRateModal();
   }
 });
 
 // Initial Render
-renderApp();
+async function initApp() {
+  pubListEl.innerHTML = '<div style="color:white; text-align:center;">Loading pubs...</div>';
+  await store.fetchPubs();
+  renderApp();
+}
+
+initApp();
