@@ -41,7 +41,7 @@ function renderPubCard(pub) {
         ${pub.reviews} Reviews
       </span>
       <button class="reviews-trigger" data-id="${pub.id}" style="background: none; border: none; font: inherit; font-size: 0.85rem; color: var(--primary); margin-right: auto; margin-left: 12px; padding: 4px; cursor: pointer; text-decoration: underline;">
-        Read Reviews
+        View Details
       </button>
       <button class="btn rate-btn" data-id="${pub.id}" style="padding: 6px 12px; font-size: 0.85rem;">Rate Pub</button>
     </div>
