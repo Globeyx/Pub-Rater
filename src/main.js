@@ -41,6 +41,7 @@ function renderPubCard(pub) {
     </div>
     <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px;">${pub.description}</p>
     <div class="pub-reviews" style="display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
         ${pub.reviews} Reviews
       </span>
       <button class="reviews-trigger" data-id="${pub.id}" style="background: none; border: none; font: inherit; font-size: 0.85rem; color: var(--primary); margin-right: auto; margin-left: 12px; padding: 4px; cursor: pointer; text-decoration: underline;">

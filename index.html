@@ -61,62 +61,63 @@
                 </div>
             </form>
         </div>
-        <div id="ratePubModal" class="modal-overlay">
-            <div class="modal-content">
-                <h2 style="margin-bottom: 24px;">Rate this Pub</h2>
-                <form id="ratePubForm">
-                    <input type="hidden" name="pubId" id="ratePubId">
-                    <div class="form-group">
-                        <label class="form-label">Your Rating</label>
-                        <div class="star-rating" id="starRating">
-                            <span class="star" data-rating="1">★</span>
-                            <span class="star" data-rating="2">★</span>
-                            <span class="star" data-rating="3">★</span>
-                            <span class="star" data-rating="4">★</span>
-                            <span class="star" data-rating="5">★</span>
-                        </div>
-                        <input type="hidden" name="rating" id="ratingInput" required>
+    </div>
+
+    <!-- Rate Pub Modal -->
+    <div id="ratePubModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 24px;">Rate this Pub</h2>
+            <form id="ratePubForm">
+                <input type="hidden" name="pubId" id="ratePubId">
+                <div class="form-group">
+                    <label class="form-label">Your Rating</label>
+                    <div class="star-rating" id="starRating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Review (Optional)</label>
-                        <textarea name="reviewText" id="reviewTextInput" class="form-textarea" rows="3"
-                            placeholder="Any thoughts?"></textarea>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px;">
-                        <button type="button" class="btn" id="cancelRateBtn">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Submit Rating</button>
-                    </div>
-                </form>
-            </div>
+                    <input type="hidden" name="rating" id="ratingInput" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Review (Optional)</label>
+                    <textarea name="reviewText" id="reviewTextInput" class="form-textarea" rows="3"
+                        placeholder="Any thoughts?"></textarea>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px;">
+                    <button type="button" class="btn" id="cancelRateBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Rating</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <!-- Pub Detail Modal (formerly Reviews Modal) -->
-        <div class="modal-overlay" id="reviewsModal">
-            <div class="modal-content" style="max-width: 600px;">
-                <h2 id="reviewsTitle" style="margin-bottom: 20px;">Pub Details</h2>
+    <!-- Pub Detail Modal -->
+    <div class="modal-overlay" id="reviewsModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 id="reviewsTitle" style="margin-bottom: 20px;">Pub Details</h2>
 
-                <!-- New: Image Container -->
-                <div id="pubDetailImage" class="modal-image-container">
-                    <img src="" alt="Pub Interior">
-                </div>
-
-                <!-- New: Actions Container -->
-                <div class="pub-actions">
-                    <a id="mapLink" href="#" target="_blank" class="btn btn-primary modal-action-btn">
-                        📍 View on Map
-                    </a>
-                </div>
-
-                <h3 style="margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px;">
-                    Reviews</h3>
-                <div id="reviewsContainer" style="max-height: 400px; overflow-y: auto;">
-                    <!-- Reviews will be populated here -->
-                </div>
-                <button class="btn" id="closeReviewsBtn" style="width: 100%; margin-top: 20px;">Close</button>
+            <div id="pubDetailImage" class="modal-image-container">
+                <img src="" alt="Pub Interior">
             </div>
-        </div>
 
-        <script type="module" src="/src/main.js"></script>
+            <div class="pub-actions">
+                <a id="mapLink" href="#" target="_blank" class="btn btn-primary modal-action-btn">
+                    📍 View on Map
+                </a>
+            </div>
+
+            <h3 style="margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px;">
+                Reviews</h3>
+            <div id="reviewsContainer" style="max-height: 400px; overflow-y: auto;">
+                <!-- Reviews will be populated here -->
+            </div>
+            <button class="btn" id="closeReviewsBtn" style="width: 100%; margin-top: 20px;">Close</button>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
