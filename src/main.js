@@ -36,7 +36,6 @@ function renderPubCard(pub) {
         <div class="rating-badge">
           ★ ${pub.rating > 0 ? pub.rating.toFixed(1) : '-'}
         </div>
-        <button class="delete-btn" data-id="${pub.id}" title="Delete Pub">×</button>
       </div>
     </div>
     <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px;">${pub.description}</p>
@@ -88,20 +87,7 @@ pubListEl.addEventListener('click', (e) => {
     console.log('Opening reviews for:', pubId); // Debug log
     openReviewsModal(pubId);
   }
-
-  const deleteBtn = e.target.closest('.delete-btn');
-  if (deleteBtn) {
-    if (confirm('Are you sure you want to delete this pub?')) {
-      const pubId = deleteBtn.getAttribute('data-id');
-      handleDelete(pubId);
-    }
-  }
 });
-
-async function handleDelete(pubId) {
-  await store.deletePub(pubId);
-  renderApp();
-}
 
 
 // Open Pub Detail (Reviews) Modal
