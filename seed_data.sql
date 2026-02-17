@@ -4,7 +4,7 @@
 -- 1. Insert PUBS
 insert into pubs (id, name, location, description, rating, reviews_count, total_rating_score, image_url, map_url)
 values 
-  ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Hradecký Klenot', 'Velké náměstí 25, Hradec Králové', 'Brewery in the heart of the city, restoring the tradition of HK brewing.', 4.8, 4, 19.0, 'public/images/pubs/klenot.png', 'https://maps.google.com/?q=Velké+náměstí+25,+Hradec+Králové'),
+  ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Hradecký Klenot', 'Velké náměstí 25, Hradec Králové', 'Brewery in the heart of the city, restoring the tradition of HK brewing.', 4.8, 4, 19.0, 'images/pubs/klenot.png', 'https://maps.google.com/?q=Velké+náměstí+25,+Hradec+Králové'),
   ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Rodinný pivovar 713', 'Hradec Králové - Kukleny', 'Family brewery specializing in honest craft lagers and specials.', 4.7, 3, 14.0, null, 'https://maps.google.com/?q=Hradec+Králové+Kukleny+Pivovar+713'),
   ('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Pivovar Beránek', 'Stěžery (near HK)', 'Microbrewery offering unpasteurized beers like Jehně and Beran.', 4.6, 3, 14.0, null, 'https://maps.google.com/?q=Pivovar+Beránek+Stěžery'),
   ('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', 'Minipivovar Kubík', 'Profesora Smotlachy, Hradec Králové', 'Small local brewery focusing on quality ingredients.', 4.5, 2, 9.0, null, 'https://maps.google.com/?q=Minipivovar+Kubík+Hradec+Králové'),
