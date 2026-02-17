@@ -1,3 +1,10 @@
+-- Enable UUID extension
+create extension if not exists "uuid-ossp";
+
+-- Clean up existing tables (be careful, this deletes data!)
+drop table if exists reviews;
+drop table if exists pubs;
+
 -- Create Pubs Table
 create table pubs (
   id uuid default uuid_generate_v4() primary key,
@@ -22,14 +29,14 @@ create table reviews (
   user_name text default 'Anonymous'
 );
 
--- Turn on Row Level Security (optional but recommended later, for now we keep it open for demo)
+-- Turn on Row Level Security
 alter table pubs enable row level security;
 alter table reviews enable row level security;
 
--- Create policies to allow public read/write (SIMPLIFIED FOR DEMO - NOT FOR PRODUCTION)
+-- Create policies to allow public read/write (SIMPLIFIED FOR DEMO)
 create policy "Public pubs are viewable by everyone" on pubs for select using (true);
 create policy "Public pubs are insertable by everyone" on pubs for insert with check (true);
-create policy "Public pubs aredeletable by everyone" on pubs for delete using (true);
+create policy "Public pubs are deletable by everyone" on pubs for delete using (true);
 
 create policy "Public reviews are viewable by everyone" on reviews for select using (true);
 create policy "Public reviews are insertable by everyone" on reviews for insert with check (true);

@@ -5,20 +5,14 @@
 insert into pubs (id, name, location, description, rating, reviews_count, total_rating_score, image_url, map_url)
 values 
   ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Hradecký Klenot', 'Velké náměstí 25, Hradec Králové', 'Brewery in the heart of the city, restoring the tradition of HK brewing.', 4.8, 4, 19.0, 'public/images/pubs/klenot.png', 'https://maps.google.com/?q=Velké+náměstí+25,+Hradec+Králové'),
-  
   ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Rodinný pivovar 713', 'Hradec Králové - Kukleny', 'Family brewery specializing in honest craft lagers and specials.', 4.7, 3, 14.0, null, 'https://maps.google.com/?q=Hradec+Králové+Kukleny+Pivovar+713'),
-  
   ('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Pivovar Beránek', 'Stěžery (near HK)', 'Microbrewery offering unpasteurized beers like Jehně and Beran.', 4.6, 3, 14.0, null, 'https://maps.google.com/?q=Pivovar+Beránek+Stěžery'),
-  
   ('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', 'Minipivovar Kubík', 'Profesora Smotlachy, Hradec Králové', 'Small local brewery focusing on quality ingredients.', 4.5, 2, 9.0, null, 'https://maps.google.com/?q=Minipivovar+Kubík+Hradec+Králové'),
-  
   ('e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15', 'Pivovarská Brána', 'Hradec Králové - Velké náměstí', 'Excellent beer in the heart of the city with a friendly environment.', 4.5, 2, 9.0, null, 'https://maps.google.com/?q=Pivovarská+Brána+Hradec+Králové'),
-  
   ('f0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16', 'na JEDNO', 'Hradec Králové - Center', 'Beautiful little pub with vaulted ceilings, offering 5 taps of craft beer.', 5.0, 4, 20.0, null, 'https://maps.google.com/?q=na+JEDNO+Hradec+Králové'),
-  
   ('00eebc99-9c0b-4ef8-bb6d-6bb9bd380a17', 'Hostinec U Kohouta', 'Hradec Králové', 'Traditional Czech pub atmosphere offering classic pivo.', 4.5, 2, 9.0, null, 'https://maps.google.com/?q=Hostinec+U+Kohouta+Hradec+Králové'),
-  
-  ('10eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', 'Batalion u Draků', 'Hradec Králové - Old Town', 'Legendary underground spot with foosball, darts, and a cool vibe.', 4.7, 3, 14.0, null, 'https://maps.google.com/?q=Batalion+u+Draků+Hradec+Králové');
+  ('10eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', 'Batalion u Draků', 'Hradec Králové - Old Town', 'Legendary underground spot with foosball, darts, and a cool vibe.', 4.7, 3, 14.0, null, 'https://maps.google.com/?q=Batalion+u+Draků+Hradec+Králové')
+on conflict (id) do nothing;
 
 
 -- 2. Insert REVIEWS (linked to pubs via ID)
@@ -61,4 +55,5 @@ values
   -- Reviews for Batalion u Draků
   ('10eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', 5, 'Legendary spot. Great for late nights.', '2023-11-15 23:00:00+00'),
   ('10eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', 4, 'Can get smoky, but the vibe is unmatched.', '2023-10-05 21:30:00+00'),
-  ('10eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', 5, 'Foosball tables are top notch!', '2023-11-01 20:00:00+00');
+  ('10eebc99-9c0b-4ef8-bb6d-6bb9bd380a18', 5, 'Foosball tables are top notch!', '2023-11-01 20:00:00+00')
+on conflict do nothing;
