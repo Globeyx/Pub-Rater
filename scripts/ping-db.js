@@ -6,29 +6,42 @@ dotenv.config();
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-    console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables.');
+if (!supabaseUrl) {
+    console.error('❌ Error: SUPABASE_URL is missing.');
     process.exit(1);
 }
+
+if (!supabaseKey) {
+    console.error('❌ Error: SUPABASE_SERVICE_ROLE_KEY is missing.');
+    process.exit(1);
+}
+
+console.log('✅ Environment variables found.');
+console.log(`URL: ${supabaseUrl.substring(0, 15)}...`);
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function keepAlive() {
-    console.log('Pinging Supabase database...');
+    console.log('📡 Pinging Supabase database...');
 
-    // A simple query to keep the database active
-    const { data, error } = await supabase
-        .from('pubs') // Assuming 'pubs' table exists based on previous work
-        .select('id')
-        .limit(1);
+    try {
+        const { data, error } = await supabase
+            .from('pubs')
+            .select('id')
+            .limit(1);
 
-    if (error) {
-        console.error('Error pinging database:', error.message);
+        if (error) {
+            console.error('❌ Supabase error:', error.message);
+            console.error('Status code:', error.status);
+            process.exit(1);
+        }
+
+        console.log('✅ Successfully pinged database.');
+        console.log('DB response:', JSON.stringify(data));
+    } catch (err) {
+        console.error('❌ Unexpected error:', err.message);
         process.exit(1);
     }
-
-    console.log('Successfully pinged database. Data received:', data);
-    console.log('Supabase project is active.');
 }
 
 keepAlive();
